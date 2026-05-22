@@ -1,7 +1,7 @@
 package models
 
 type Habits struct {
-	Id      int
-	HabitId int
-	Title   string
+	Id     int
+	UserId int
+	Title  string
 }
