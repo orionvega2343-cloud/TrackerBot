@@ -36,8 +36,8 @@ func (h *HabitsHandler) Reg() {
 		)
 		return c.Send("Привет! Я бот трекер привычек, помогу тебе бросить вредные привычки или приобрести полезные,для начала работы выбери действие ниже!", markup)
 	})
-	h.bot.Handle(btn1, h.AddHabitsHandler)
-	h.bot.Handle(btn2, h.GetHabitsHandler)
+	h.bot.Handle(&btn1, h.AddHabitsHandler)
+	h.bot.Handle(&btn2, h.GetHabitsHandler)
 	h.bot.Handle(tele.OnText, h.TextHandler)
 
 }
@@ -53,7 +53,7 @@ func (h *HabitsHandler) TextHandler(c tele.Context) error {
 	var m models.Habits
 	msg := c.Message().Text
 	m.Title = msg
-	m.UserId = int(uId)
+	m.UserId = uId
 	if uState[c.Sender().ID] == "adding_habit" {
 		err := h.s.CreateHabits(&m)
 		if err != nil {
@@ -72,7 +72,7 @@ func (h *HabitsHandler) GetHabitsHandler(c tele.Context) error {
 	if err != nil {
 		return err
 	}
-	res, err := h.s.GetHabits(int(uId))
+	res, err := h.s.GetHabits(uId)
 	if err != nil {
 		return err
 	}

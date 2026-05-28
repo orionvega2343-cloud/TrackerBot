@@ -5,6 +5,7 @@ import (
 	"TrackerBot/Internal/service"
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
 	tele "gopkg.in/telebot.v3"
@@ -21,12 +22,16 @@ func NewCompleteHabitsHandler(s *service.CompleteService, bot *tele.Bot) *Comple
 
 func (h *CompleteHabits) Reg() {
 	h.bot.Handle(tele.OnCallback, h.CompleteHabitHandler)
-	h.bot.Handle(btn3, h.StreakHandler)
+	h.bot.Handle(&btn3, h.StreakHandler)
 }
 
 func (h *CompleteHabits) CompleteHabitHandler(c tele.Context) error {
-	data := c.Data()
-	parsed, err := strconv.Atoi(data)
+	raw := c.Callback().Data
+	parts := strings.SplitN(raw, "|", 2)
+	if len(parts) < 2 {
+		return fmt.Errorf("unexpected callback data: %s", raw)
+	}
+	parsed, err := strconv.Atoi(parts[1])
 	if err != nil {
 		return err
 	}
@@ -38,13 +43,12 @@ func (h *CompleteHabits) CompleteHabitHandler(c tele.Context) error {
 	if err != nil {
 		return err
 	}
-	c.Respond()
-	return nil
+	return c.Respond(&tele.CallbackResponse{Text: "Привычка отмечена как выполненная!"})
 }
 
 func (h *CompleteHabits) StreakHandler(c tele.Context) error {
 	uId := c.Sender().ID
-	res, err := h.s.Streak(int(uId))
+	res, err := h.s.Streak(uId)
 	if err != nil {
 		return err
 	}

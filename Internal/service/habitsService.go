@@ -21,7 +21,7 @@ func (c *HabitsService) CreateHabits(m *models.Habits) error {
 	return nil
 }
 
-func (c *HabitsService) GetHabits(id int) ([]*models.Habits, error) {
+func (c *HabitsService) GetHabits(id int64) ([]*models.Habits, error) {
 	res, err := c.h.GetHabits(id)
 	if err != nil {
 		return nil, err

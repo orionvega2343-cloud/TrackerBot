@@ -17,8 +17,9 @@ type DB struct {
 }
 
 type Config struct {
-	Token string `env:"token"`
-	DB    DB     `yaml:"db"`
+	Token    string `env:"BOT_TOKEN"`
+	ProxyURL string `env:"PROXY_URL"`
+	DB       DB     `yaml:"db"`
 }
 
 func MustLoadConfig() *Config {

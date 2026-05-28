@@ -3,6 +3,7 @@ package service
 import (
 	"TrackerBot/Internal/models"
 	"TrackerBot/Internal/repository"
+	"time"
 )
 
 type CompleteService struct {
@@ -21,18 +22,28 @@ func (s *CompleteService) Complete(m *models.CompleteHabits) error {
 	return nil
 }
 
-func (s *CompleteService) Streak(id int) (int, error) {
-	var streak int
+func (s *CompleteService) Streak(id int64) (int, error) {
 	res, err := s.c.GetCompleteHabits(id)
 	if err != nil {
-		return streak, err
+		return 0, err
 	}
+	if len(res) == 0 {
+		return 0, nil
+	}
+
+	days := make(map[string]bool)
 	for _, v := range res {
-		if v.IsComplete == true {
-			streak++
-		} else if v.IsComplete == false {
+		days[v.Date.Format("2006-01-02")] = true
+	}
+
+	streak := 0
+	day := time.Now()
+	for {
+		if !days[day.Format("2006-01-02")] {
 			break
 		}
+		streak++
+		day = day.AddDate(0, 0, -1)
 	}
 	return streak, nil
 }

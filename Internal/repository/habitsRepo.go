@@ -15,14 +15,14 @@ func NewHabitsRepo(db *sqlx.DB) *HabitsRepo {
 }
 
 func (r *HabitsRepo) CreateHabits(m *models.Habits) error {
-	_, err := r.db.Exec(`INSERT INTO habits(user_id,title) VALUES($1,$2,$3)`, m.Id, m.UserId, m.Title)
+	_, err := r.db.Exec(`INSERT INTO habits(user_id,title) VALUES($1,$2)`, m.UserId, m.Title)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *HabitsRepo) GetHabits(id int) ([]*models.Habits, error) {
+func (r *HabitsRepo) GetHabits(id int64) ([]*models.Habits, error) {
 	var habits []*models.Habits
 	query := `SELECT id,user_id,title FROM habits WHERE user_id=$1`
 
