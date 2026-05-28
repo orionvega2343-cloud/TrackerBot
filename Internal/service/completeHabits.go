@@ -21,14 +21,6 @@ func (s *CompleteService) Complete(m *models.CompleteHabits) error {
 	return nil
 }
 
-func (s *CompleteService) GetHabits(id int) ([]*models.CompleteHabits, error) {
-	res, err := s.c.GetCompleteHabits(id)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
-}
-
 func (s *CompleteService) Streak(id int) (int, error) {
 	var streak int
 	res, err := s.c.GetCompleteHabits(id)
